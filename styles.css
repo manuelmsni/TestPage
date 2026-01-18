@@ -88,19 +88,31 @@ a.nolink {
 }
 #hero>.container{
     z-index: 2;
+    text-align: center;
 }
+
 #hero h1{
-    font-size: 600%;
+    font-size: clamp(48px, 10vw, 100px);
     font-weight: lighter;
     font-family: fantasy;
     margin: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
+
 #hero h2{
-    font-size: 200%;
+    font-size: clamp(24px, 5vw, 50px);
     margin: 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
-#about h3{
+
+#hero h3{
+    font-size: clamp(18px, 3vw, 40px);
     font-weight: normal;
+    margin: 0.5em 0 0 0;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 .methodology-content{
     max-width: 1200px;
