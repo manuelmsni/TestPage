@@ -14,6 +14,12 @@ const dataStructure = {
     },
     predators : {
         gid: "961193381"
+    },
+    projects : {
+        gid: "1299205135"
+    },
+    collaborations : {
+        gid: "921134955"
     }
 }
 
@@ -83,20 +89,22 @@ async function fetchGoogleSheetsCSVAsJson(sheetId, sheetGID = 0, localPath = nul
 async function loadDataSheet() {
     const ds = dataStructure;
     try {
-        const [a, b, c, d, e] = await Promise.all([
+        const [a, b, c, d, e, f, g] = await Promise.all([
             fetchGoogleSheetsCSVAsJson(ds.gid, ds.menu.gid),
             fetchGoogleSheetsCSVAsJson(ds.gid, ds.sections.gid),
             fetchGoogleSheetsCSVAsJson(ds.gid, ds.services.gid),
             fetchGoogleSheetsCSVAsJson(ds.gid, ds.predators.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.methodology.gid)
+            fetchGoogleSheetsCSVAsJson(ds.gid, ds.methodology.gid),
+            fetchGoogleSheetsCSVAsJson(ds.gid, ds.projects.gid),
+            fetchGoogleSheetsCSVAsJson(ds.gid, ds.collaborations.gid)
         ]);
-        return parseData(a, b, c, d, e);
+        return parseData(a, b, c, d, e, f, g);
     } catch (e) {
         console.error("Error cargando base de datos:", e);
     }
 }
 
-function parseData(menu, sections, services, predators, methodology) {
+function parseData(menu, sections, services, predators, methodology, projects, collaborations) {
     const isEnabled = (dateStr) => {
         if (!dateStr || dateStr == "") return false;
         const activationDate = new Date(dateStr.split('/').reverse().join('-'));
@@ -146,10 +154,25 @@ function parseData(menu, sections, services, predators, methodology) {
                 name: x["Nombre"],
                 state: x["Estadio"],
                 description: x["Descripción"],
-                image: x["Imagen"]
-            }))
+                image: x["Imagen"],
+                price: x["Precio"],
+                sheet: x["Ficha"],
+            })),
+        projects : projects
+            .filter(x => isEnabled(x["Habilitado"]))
+            .map(x => ({
+                enabled: x["Habilitado"],
+                title: x["Título"],
+                description: x["Descripción"]
+            })),
+        collaborations : collaborations
+            .filter(x => isEnabled(x["Habilitado"]))
+            .map(x => ({
+                enabled: x["Habilitado"],
+                title: x["Título"],
+                description: x["Descripción"]
+            })),
     };
-
     return appData;
 }
 
@@ -168,22 +191,30 @@ function renderMenu() {
                 .join('')}
         </ul>
     `;
+    
     if (!document.getElementById('menu-container')) {
         document.body.appendChild(container);
     }
+
     var hamburguer = document.getElementById('hamburger');
-     if (hamburguer) {
+    if (hamburguer) {
         hamburguer.addEventListener('click', function () {
             var menu = document.getElementById('menu');
             if (menu) {
-                if (menu.classList.contains('show')) {
-                    menu.classList.remove('show');
-                } else {
-                    menu.classList.add('show');
-                }
+                menu.classList.toggle('show');
             }
         });
     }
+
+    const menuItems = container.querySelectorAll('.menu-item');
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const menu = document.getElementById('menu');
+            if (menu) {
+                menu.classList.remove('show');
+            }
+        });
+    });
 }
 
 function renderHero(section) {
@@ -309,6 +340,7 @@ function renderServices(section) {
 function renderPredators(section) {
     const predatorsSection = document.getElementById('predators') || document.createElement('section');
     predatorsSection.id = 'portfolio';
+
     predatorsSection.innerHTML = `
         <div class="container">
             <div>
@@ -316,10 +348,9 @@ function renderPredators(section) {
                 <p>${section.text}</p>
             </div>
             <div class="grid">
-                ${appData.predators.map(predator => `
+                ${appData.predators.map((predator, index) => `
                     <div class="predator-card">
-                        <div class="card">
-                            ${predator.image ? `<div class="predator-image"><img src="https://insectaria.com/${predator.image}" alt="${predator.name}"></div>` : ''}
+                        <div class="card ${(predator.sheet || predator.price) ? 'clickable-card' : ''}" data-index="${index}">                            ${predator.image ? `<div class="predator-image"><img src="https://insectaria.com/${predator.image}" alt="${predator.name}"></div>` : ''}
                             <div class="predator-info">
                                 <h3><i>${predator.name}</i></h3>
                                 <h4>${predator.state}</h4>
@@ -331,12 +362,45 @@ function renderPredators(section) {
             </div>
         </div>
     `;
-    if (section.font) {
-        predatorsSection.style.color = section.font;
-    }
-    if (!document.getElementById('predators')) {
-        document.body.append(predatorsSection);
-    }
+
+    if (section.font) predatorsSection.style.color = section.font;
+    if (!document.getElementById('predators')) document.body.append(predatorsSection);
+    const cards = predatorsSection.querySelectorAll('.card.clickable-card');
+    cards.forEach(card => {
+        const index = card.getAttribute('data-index');
+        const predator = appData.predators[index];
+
+        if(predator.price || predator.sheet){
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+                
+                let priceTable = '';
+                if (predator.price) {
+                    const rows = predator.price.trim().split('\n');
+                    const tableRows = rows.map(row => {
+                        const cells = row.split('|').map(cell => `<td>${cell.trim()}</td>`).join('');
+                        return `<tr>${cells}</tr>`;
+                    }).join('');
+                    priceTable = `
+                        <table class="price-table">
+                            <tbody class="price-table-body">
+                                ${tableRows}
+                            </tbody>
+                        </table>`;
+                }
+                const modalContent = `
+                    <div>
+                        <div class="predator-graphic-info">
+                            <img src="https://insectaria.com/${predator.image}">
+                            ${priceTable}
+                        </div>
+                        ${predator.sheet ? predator.sheet.split('\n').map(line => `<p>${line.trim()}</p>`).join(''): ''}
+                    </div>
+                `;
+                modal(predator.name, modalContent);
+            });
+        }
+    });
 }
 
 function renderContact(section) {
@@ -367,6 +431,94 @@ function renderContact(section) {
     }
 }
 
+function renderProjects(section){
+    const projectsSection = document.getElementById('projects') || document.createElement('section');
+    projectsSection.id = 'projects';
+    if (section.background) projectsSection.style.backgroundImage = `url(https://insectaria.com/${section.background})`;
+    if (section.font) projectsSection.style.color = section.font;
+    projectsSection.innerHTML = `
+            <div class="container">
+                <div class="grid">
+                    ${appData.projects.map(project => `
+                        <div class="project-card">
+                            <div class="card">
+                                <div class="project-info">
+                                    <h3>${project.title}</h3>
+                                    <p>${project.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    if (!document.getElementById('projects')) {
+        document.body.append(projectsSection);
+    }
+}
+
+function renderCollaborations(section){
+    const collaborationSection = document.getElementById('collaborations') || document.createElement('section');
+    collaborationSection.id = 'collaborations';
+    collaborationSection.innerHTML = `
+            <div class="container">
+                <div>
+                    <h2>${section.title}</h2>
+                    <p>${section.text}</p>
+                </div>
+                <div class="grid">
+                    ${appData.collaborations.map(collaboration => `
+                        <div class="collaboration-card">
+                            <div class="card">
+                                <div class="collaboration-info">
+                                    <h3>${collaboration.title}</h3>
+                                    <p>${collaboration.description}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}  
+                </div>
+            </div>
+        `;
+    if (!document.getElementById('collaborations')) {
+        document.body.append(collaborationSection);
+    }
+}
+
+function renderModal() {
+    if (document.getElementById('modal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'modal';
+    modal.classList.add('hidden');
+    modal.innerHTML = `
+        <div class="modal-window">
+            <button class="modal-close">✖</button>
+            <h2 id="modal-title"></h2>
+            <div class="modal-content" id="modal-content"></div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+    modal.querySelector('.modal-close').addEventListener('click', closeModal);
+}
+function modal(title, htmlContent) {
+    const modal = document.getElementById('modal');
+    document.getElementById('modal-title').textContent = title;
+    document.getElementById('modal-content').innerHTML = htmlContent;
+
+    modal.classList.remove('hidden');
+}
+function closeModal() {
+    const modal = document.getElementById('modal');
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+}
+
 function renderSections() {
     renderMenu();
 
@@ -380,12 +532,18 @@ function renderSections() {
     if (servicesData) renderServices(servicesData);
 
     const portfolio = appData.sections.find(s => s.id === "#portfolio");
-    if (portfolio && appData.predators) {
-        renderPredators(portfolio);
-    }
+    if (portfolio && appData.predators) renderPredators(portfolio);
+
+    const projects = appData.sections.find(s => s.id === "#projects");
+    if (projects) renderProjects(projects);
+
+    const collaborations = appData.sections.find(s => s.id === "#collaborations");
+    if (collaborations) renderCollaborations(collaborations);
 
     const contactData = appData.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
+
+    renderModal();
 }
 
 function debug(data){
@@ -400,6 +558,15 @@ function load() {
     loadDataSheet().then((data) => {
         //debug(data);  
         renderSections();
+        modal(
+            "Advertencia de contenido",
+            `
+                <h3>Página en construcción</h3>
+                <p>Esta página es un prototipo</p>
+                <p>La información que aparece en esta página es completamente inventada, los textos solo tienen la finalidad de comprobar como será el aspecto real de la página una vez se rellene con la información real de los productos.</p>
+                <p>Los precios que aparecen en la misma no son los precios reales del producto.</p>
+            `
+        );
     }).catch(err => {
         console.error(err);
         document.body.innerHTML = `<div style="text-align:center;"><h2>Error al cargar datos, vuelve más tarde.</h2><h3>info@insectaria.com</h3></div>`;
