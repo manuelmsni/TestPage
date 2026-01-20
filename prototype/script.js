@@ -385,7 +385,6 @@ function waitForAppDataAndDOM({ timeout = 10000, interval = 20 } = {}) {
             if (document.body && window.appData !== undefined && window.appData !== null) {
                 return resolve(window.appData);
             }
-
             if (Date.now() - start > timeout) {
                 return reject(new Error("Timeout esperando DOM o appData"));
             }
@@ -396,10 +395,109 @@ function waitForAppDataAndDOM({ timeout = 10000, interval = 20 } = {}) {
     });
 }
 
+function createFloatingSaveButton(appData) {
+    // Contenedor de hover
+    const container = document.createElement("div");
+    Object.assign(container.style, {
+        position: "fixed",
+        bottom: "0",
+        left: "0",
+        width: "120px",
+        height: "120px",
+        zIndex: "999998",
+        pointerEvents: "auto"
+    });
+
+    // Botón
+    const btn = document.createElement("button");
+    btn.innerText = "💾";
+
+    Object.assign(btn.style, {
+        position: "absolute",
+        bottom: "10px",
+        left: "10px",
+        width: "52px",
+        height: "52px",
+        borderRadius: "50%",     // 🔵 Circular
+        border: "none",
+        background: "#222",
+        color: "#fff",
+        fontSize: "24px",
+        cursor: "pointer",
+        opacity: "0",
+        transition: "opacity 0.25s, transform 0.15s",
+        zIndex: "999999"
+    });
+
+    // Mostrar / ocultar usando el contenedor
+    container.addEventListener("mouseenter", () => {
+        btn.style.opacity = "1";
+    });
+
+    container.addEventListener("mouseleave", () => {
+        btn.style.opacity = "0";
+    });
+
+    // Efecto al pasar por encima del botón
+    btn.addEventListener("mouseenter", () => {
+        btn.style.transform = "scale(1.1)";
+    });
+
+    btn.addEventListener("mouseleave", () => {
+        btn.style.transform = "scale(1)";
+    });
+
+    // Click => guardar archivo
+    btn.addEventListener("click", async () => {
+        try {
+            // Configuramos las opciones para sugerir nombre y ubicación
+            const options = {
+                suggestedName: 'bd.js',
+                types: [{
+                    description: 'JavaScript File',
+                    accept: {'application/javascript': ['.js']},
+                }],
+            };
+
+            // Abre el diálogo de "Guardar como"
+            const handle = await window.showSaveFilePicker(options);
+            
+            // Creamos un flujo de escritura
+            const writable = await handle.createWritable();
+            await writable.write(
+`
+window.appData = ${JSON.stringify(appData, null, 2)};
+
+document.dispatchEvent(new Event("appDataReady"));
+`
+            );
+            await writable.close();
+            
+            console.log("Archivo guardado con éxito");
+        } catch (err) {
+            console.error("El usuario canceló o el navegador no soporta la API", err);
+        }
+    });
+
+    container.appendChild(btn);
+    document.body.appendChild(container);
+}
+
 async function load() {
     try{
-        await waitForAppDataAndDOM();
+        await waitForAppDataAndDOM()
+        //debug(data);  
         renderSections();
+        modal(
+            "Advertencia de contenido",
+            `
+                <h3>Página en construcción</h3>
+                <p>Esta página es un prototipo</p>
+                <p>La información que aparece en esta página es completamente inventada, los textos solo tienen la finalidad de comprobar como será el aspecto real de la página una vez se rellene con la información real de los productos.</p>
+                <p>Los precios que aparecen en la misma no son los precios reales del producto.</p>
+            `
+        );
+        createFloatingSaveButton(appData);
     }catch(err){
         console.error(err);
         document.body.innerHTML = `<div style="text-align:center;"><h2>Error al cargar datos, vuelve más tarde.</h2><h3>info@insectaria.com</h3></div>`;
