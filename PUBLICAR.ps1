@@ -1,5 +1,5 @@
 # =====================
-# Script Git Auto Push
+# Script Git Auto Push - Fixed
 # =====================
 
 $ErrorActionPreference = "Stop"
@@ -9,84 +9,72 @@ $secureToken = Read-Host "Introduce la contraseña" -AsSecureString
 $Token = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto(
     [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($secureToken)
 )
-# Nota: Si el usuario ya escribe "github_pat_...", no hace falta concatenarlo. 
-# Si quieres forzar el prefijo, usa: ("github_pat_" + $Token)
 
 # --- Preparar log ---
 $logDir = "C:\web_logs"
 $logFile = "$logDir\git.log"
 
-if (!(Test-Path $logDir)) {
-    New-Item -ItemType Directory -Path $logDir | Out-Null
-}
-if (!(Test-Path $logFile)) {
-    New-Item -ItemType File -Path $logFile | Out-Null
-}
+if (!(Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir | Out-Null }
+if (!(Test-Path $logFile)) { New-Item -ItemType File -Path $logFile | Out-Null }
 
 function Write-Log($msg) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
     Add-Content -Path $logFile -Value "[$timestamp] $msg"
 }
 
-# --- Función para ejecutar git y capturar error real ---
+# --- FUNCIÓN MEJORADA ---
 function Invoke-Git($gitArgs) {
-    # Usamos 2>&1 para capturar warnings como si fueran errores y poder leerlos
+    # Redirigimos stderr a stdout (2>&1) para capturar mensajes de progreso
     $output = & git @gitArgs 2>&1
+    
+    # Solo disparamos el error si el código de salida NO es 0
     if ($LASTEXITCODE -ne 0) {
-        # El commit devuelve código 1 si no hay nada que subir, lo ignoramos para que no cierre el script
+        # Excepción: No hay nada que commitear (no es un error real)
         if ($gitArgs -contains "commit" -and $output -match "nothing to commit") {
             return $output
         }
+        # Si llegamos aquí, sí es un error de verdad
         throw ($output | Out-String)
     }
     return $output
 }
 
 try {
-    Write-Host "Ejecutando git pull..." -ForegroundColor Cyan
+    Write-Host "Iniciando sincronización..." -ForegroundColor Cyan
+
+    Write-Host "-> Pulling..."
     Invoke-Git @("pull")
 
-    Write-Host "Ejecutando git add..." -ForegroundColor Cyan
+    Write-Host "-> Adding..."
     Invoke-Git @("add", "*")
 
+    Write-Host "-> Committing..."
     $fecha = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $msg = "Actualización - $fecha"
+    Invoke-Git @("commit", "-m", "Actualización - $fecha")
 
-    Write-Host "Ejecutando git commit..." -ForegroundColor Cyan
-    Invoke-Git @("commit", "-m", $msg)
-
-    Write-Host "Ejecutando git push..." -ForegroundColor Cyan
+    Write-Host "-> Pushing..." -ForegroundColor Yellow
+    # Aquí es donde fallaba: Git escribe el progreso en el flujo de error
     Invoke-Git @("push")
 
-    Write-Host "`n========================================" -ForegroundColor Green
-    Write-Host "Proceso completado correctamente." -ForegroundColor Green
-    Write-Host "========================================`n"
+    Write-Host "`n[ OK ] Proceso completado correctamente." -ForegroundColor Green
 }
 catch {
     $errMsg = $_.Exception.Message
-    $errStack = $_.ScriptStackTrace
-    $fullError = "$errMsg`n$errStack"
-
-    Write-Host "`n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" -ForegroundColor Red
-    # --- Clasificación de errores ---
-    if ($errMsg -match "auth|Authentication|403|denied") {
-        Write-Host "ERROR: Contraseña incorrecta o sin permisos." -ForegroundColor Red
+    Write-Host "`n[ ERROR ] Ha ocurrido un problema:" -ForegroundColor Red
+    
+    if ($errMsg -match "auth|403|denied") {
+        Write-Host "Contraseña incorrecta o token sin permisos de escritura." -ForegroundColor Red
     }
-    elseif ($errMsg -match "conflict|merge|non-fast-forward|overwritten") {
-        Write-Host "ERROR: Conflicto de datos. Consulte al equipo técnico." -ForegroundColor Red
+    elseif ($errMsg -match "conflict|merge") {
+        Write-Host "Hay conflictos en los archivos. Sincronice manualmente." -ForegroundColor Red
     }
     else {
-        Write-Host "Ha sucedido un error inesperado:" -ForegroundColor Red
         Write-Host $errMsg -ForegroundColor Yellow
     }
-    Write-Host "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!`n" -ForegroundColor Red
 
-    # --- Guardar detalle real en log ---
-    Write-Log "ERROR GIT:"
-    Write-Log $fullError
+    Write-Log "ERROR DETECTADO: $errMsg"
 }
 finally {
-    # Este bloque se ejecuta SIEMPRE, haya error o no
-    Write-Host "Presione una tecla para cerrar esta ventana..." -ForegroundColor Gray
+    Write-Host "`nPresione cualquier tecla para cerrar..." -ForegroundColor Gray
     $null = [System.Console]::ReadKey($true)
 }
