@@ -4,7 +4,7 @@ function renderMenu() {
     const container = document.getElementById('menu-container') || document.createElement('div');
     container.id = 'menu';
     container.innerHTML = `
-        <div class="logo"><img src="https://insectaria.com/assets/img/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;"></div>
+        <div class="logo"><img src="./assets/img/logos/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;"></div>
         <ul class="menu-list">
             <div id="hamburger"><span></span><span></span><span></span></div>
             ${appData.menu
@@ -44,7 +44,7 @@ function renderMenu() {
 function renderHero(section) {
     const heroSection = document.getElementById('hero') || document.createElement('section');
     heroSection.id = 'hero';
-    if (section.background) heroSection.style.backgroundImage = `url(https://insectaria.com/${section.background})`;
+    if (section.background) heroSection.style.backgroundImage = `url(${section.background})`;
     heroSection.innerHTML = `
         <div class="container">
             <a class="nolink" ${section.link ? `href="${section.link}"` : ''}>
@@ -98,7 +98,7 @@ function renderAbout(section) {
 function renderServices(section) {
     const servicesSection = document.getElementById('services') || document.createElement('section');
     servicesSection.id = 'services';
-    if (section.background) servicesSection.style.backgroundImage = `url(https://insectaria.com/${section.background})`;
+    if (section.background) servicesSection.style.backgroundImage = `url(${section.background})`;
     servicesSection.innerHTML = `
         <div class="container">
             <div class="grid">
@@ -107,7 +107,7 @@ function renderServices(section) {
                         <div 
                             class="card" 
                             data-index="${index}"
-                            ${service.image ? `style="--hover-bg: url('https://insectaria.com/${service.image}')"` : ``}
+                            ${service.image ? `style="--hover-bg: url('${service.image}')"` : ``}
                         >
                             <div class="service-info">
                                 <div class="icon">
@@ -231,7 +231,7 @@ function renderContact(section) {
     const contactSection = document.getElementById('contact') || document.createElement('section');
     contactSection.id = 'contact';
 
-    if (section.background) contactSection.style.backgroundImage = `url(https://insectaria.com/${section.background})`;
+    if (section.background) contactSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) contactSection.style.color = section.font;
 
     contactSection.innerHTML = `
@@ -258,7 +258,7 @@ function renderContact(section) {
 function renderProjects(section){
     const projectsSection = document.getElementById('projects') || document.createElement('section');
     projectsSection.id = 'projects';
-    if (section.background) projectsSection.style.backgroundImage = `url(https://insectaria.com/${section.background})`;
+    if (section.background) projectsSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) projectsSection.style.color = section.font;
     projectsSection.innerHTML = `
             <div class="container">
