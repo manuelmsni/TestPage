@@ -1,4 +1,5 @@
-window.appData = {
+
+                window.appData = {
   "menu": [
     {
       "enabled": "15/01/2026",
@@ -24,6 +25,11 @@ window.appData = {
       "enabled": "15/01/2026",
       "text": "CONTACTO",
       "link": "#contact"
+    },
+    {
+      "enabled": "15/01/2026",
+      "text": "icofont-instagram",
+      "link": "https://www.instagram.com/insectariacb"
     }
   ],
   "sections": [
@@ -44,7 +50,7 @@ window.appData = {
       "title": "INSECTARIA",
       "subtitle": "ENTOMOLOGÍA APLICADA",
       "text": "ALGO MÁS QUE CONTROL BIOLÓGICO",
-      "background": "assets/img/hero/DSCF2049.jpg",
+      "background": "assets/img/sections/hero.jpg",
       "font": "#FFFFFF",
       "link": "#about",
       "id": "#hero"
@@ -66,7 +72,7 @@ window.appData = {
       "title": "Mostrar todos los servicios",
       "subtitle": "Ocultar todos los servicios",
       "text": "--",
-      "background": "assets/img/testimonials-bg.jpg",
+      "background": "assets/img/sections/services.jpg",
       "font": "#3b434a",
       "link": "#portfolio",
       "id": "#services"
@@ -88,7 +94,7 @@ window.appData = {
       "title": "Contacta con nosotros",
       "subtitle": "Estamos en logroño",
       "text": "info@insectaria.com",
-      "background": "assets/img/coleccion.jpg",
+      "background": "assets/img/sections/contact.jpg",
       "font": "#444444",
       "link": "mailto:info@insectaria.com",
       "id": "#contact"
@@ -121,42 +127,42 @@ window.appData = {
       "enabled": "15/01/2026",
       "title": "Investigación",
       "text": "Servicios de apoyo a la investigación",
-      "image": "assets/img/servicios/1.jpg",
+      "image": "assets/img/services/1.jpg",
       "icon": "icofont-microscope-alt"
     },
     {
       "enabled": "15/01/2026",
       "title": "Estrategias C.B.",
       "text": "Implementación de estrategias de <b>control biológico</b>",
-      "image": "assets/img/servicios/2.jpg",
+      "image": "assets/img/services/2.jpg",
       "icon": "icofont-bug"
     },
     {
       "enabled": "15/01/2026",
       "title": "Biodiversidad",
       "text": "Estudios de biodiversidad y fauna auxiliar",
-      "image": "assets/img/servicios/6.png",
+      "image": "assets/img/services/6.png",
       "icon": "icofont-butterfly"
     },
     {
       "enabled": "15/01/2026",
       "title": "Consultoría",
       "text": "Consultoría técnica especializada",
-      "image": "assets/img/servicios/4.jpg",
+      "image": "assets/img/services/4.jpg",
       "icon": "icofont-users-alt-3"
     },
     {
       "enabled": "15/01/2026",
       "title": "Seguimientos",
       "text": "Monitorización y seguimiento de artrópodos",
-      "image": "assets/img/servicios/3.jpg",
+      "image": "assets/img/services/3.jpg",
       "icon": "icofont-search-2"
     },
     {
       "enabled": "15/01/2026",
       "title": "Identificación",
       "text": "Identificación taxonomica de insectos y ácaros",
-      "image": "assets/img/servicios/5.jpg",
+      "image": "assets/img/services/5.jpg",
       "icon": "icofont-question"
     }
   ],
@@ -241,24 +247,6 @@ window.appData = {
       "image": "assets/img/portfolio/Nesidiocoris-ninfa.jpg",
       "price": "",
       "sheet": ""
-    },
-    {
-      "enabled": "15/01/2026",
-      "name": "Cryptolaemus montrouzieri",
-      "state": "Adulto",
-      "description": "Depredador de cochinillas",
-      "image": "assets/img/portfolio/Cryptolaemus-montrouzieri.jpg",
-      "price": "",
-      "sheet": ""
-    },
-    {
-      "enabled": "15/01/2026",
-      "name": "Cryptolaemus montrouzieri",
-      "state": "Larva",
-      "description": "Depredador de cochinillas",
-      "image": "assets/img/portfolio/Cryptolaemus-montrouzieri-larva.jpg",
-      "price": "",
-      "sheet": ""
     }
   ],
   "projects": [
@@ -273,7 +261,7 @@ window.appData = {
       "description": "Test 2"
     }
   ],
-  "collaborations": [
+  "idi": [
     {
       "enabled": "15/01/2026",
       "title": "Test",
@@ -287,4 +275,5 @@ window.appData = {
   ]
 };
 
-document.dispatchEvent(new Event("appDataReady"));
+                document.dispatchEvent(new Event("appDataReady"));
+                
