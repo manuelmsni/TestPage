@@ -403,9 +403,9 @@ async function load() {
         const script = document.createElement("script");
         if (gid) {
             window.APP_GID = gid;
-            script.src = "/prototype.js";
+            script.src = "./prototype.js";
         } else {
-            script.src = "/bd.js";
+            script.src = "./bd.js";
         }
         document.head.appendChild(script);
         await waitForAppDataAndDOM();
