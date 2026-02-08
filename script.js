@@ -282,21 +282,21 @@ function renderProjects(section){
 }
 
 function renderCollaborations(section){
-    const collaborationSection = document.getElementById('collaborations') || document.createElement('section');
-    collaborationSection.id = 'collaborations';
-    collaborationSection.innerHTML = `
+    const idiSection = document.getElementById('idi') || document.createElement('section');
+    idiSection.id = 'idi';
+    idiSection.innerHTML = `
             <div class="container">
                 <div>
                     <h2>${section.title}</h2>
                     <p>${section.text}</p>
                 </div>
                 <div class="grid">
-                    ${appData.collaborations.map(collaboration => `
-                        <div class="collaboration-card">
+                    ${appData.idi.map(idi => `
+                        <div class="idi-card">
                             <div class="card">
-                                <div class="collaboration-info">
-                                    <h3>${collaboration.title}</h3>
-                                    <p>${collaboration.description}</p>
+                                <div class="idi-info">
+                                    <h3>${idi.title}</h3>
+                                    <p>${idi.description}</p>
                                 </div>
                             </div>
                         </div>
@@ -304,8 +304,8 @@ function renderCollaborations(section){
                 </div>
             </div>
         `;
-    if (!document.getElementById('collaborations')) {
-        document.body.append(collaborationSection);
+    if (!document.getElementById('idi')) {
+        document.body.append(idiSection);
     }
 }
 
@@ -361,8 +361,8 @@ function renderSections() {
     const projects = appData.sections.find(s => s.id === "#projects");
     if (projects) renderProjects(projects);
 
-    const collaborations = appData.sections.find(s => s.id === "#collaborations");
-    if (collaborations) renderCollaborations(collaborations);
+    const idi = appData.sections.find(s => s.id === "#i+d+i");
+    if (idi) renderCollaborations(idi);
 
     const contactData = appData.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
@@ -398,6 +398,16 @@ function waitForAppDataAndDOM({ timeout = 10000, interval = 20 } = {}) {
 
 async function load() {
     try{
+        const params = new URLSearchParams(window.location.search);
+        const gid = params.get("gid");
+        const script = document.createElement("script");
+        if (gid) {
+            window.APP_GID = gid;
+            script.src = "/prototype.js";
+        } else {
+            script.src = "/bd.js";
+        }
+        document.head.appendChild(script);
         await waitForAppDataAndDOM();
         renderSections();
     }catch(err){

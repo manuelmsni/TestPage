@@ -308,12 +308,12 @@ a.nolink {
 .project-card>.card {
     padding: 1rem;
 }
-.collaboration-card{
+.idi-card{
     box-sizing: border-box;
     width: calc(100% / 3);
     padding: 1rem;
 }
-.collaboration-card>.card {
+.idi-card>.card {
     padding: 1rem;
 }
 #contact{
