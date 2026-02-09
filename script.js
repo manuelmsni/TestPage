@@ -1,4 +1,4 @@
-function smoothScroll(target, duration) {
+function smoothScroll(target, duration = 800) {
     const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
     if (!targetElement) return;
 
@@ -6,22 +6,24 @@ function smoothScroll(target, duration) {
     const targetPosition = targetElement.offsetTop - menuHeight;
     const startPosition = window.pageYOffset;
     const distance = targetPosition - startPosition;
+    
+    const adjustedDuration = Math.min(Math.abs(distance) * 0.8, duration);
+    
     let startTime = null;
 
     function animation(currentTime) {
         if (startTime === null) startTime = currentTime;
         const timeElapsed = currentTime - startTime;
-        const run = ease(timeElapsed, startPosition, distance, duration);
+        const run = easeOutQuad(timeElapsed, startPosition, distance, adjustedDuration);
         window.scrollTo(0, run);
-        
-        if (timeElapsed < duration) requestAnimationFrame(animation);
+        if (timeElapsed < adjustedDuration) {
+            requestAnimationFrame(animation);
+        }
     }
 
-    function ease(t, b, c, d) {
-        t /= d / 2;
-        if (t < 1) return c / 2 * t * t + b;
-        t--;
-        return -c / 2 * (t * (t - 2) - 1) + b;
+    function easeOutQuad(t, b, c, d) {
+        t /= d;
+        return -c * t * (t - 2) + b;
     }
 
     requestAnimationFrame(animation);
