@@ -15,6 +15,25 @@ section, footer{
     background-size: cover;
     overflow: hidden;
 }
+.bg {
+    position: relative;
+    background-attachment: fixed;
+}
+.bg > *{
+    position: relative;
+    z-index: 2;
+}
+.bg::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(14, 16, 17, 0.4);
+    z-index: 1;
+    pointer-events: none;
+}
 .container{
     display: flex;
     flex-direction: column;
@@ -36,6 +55,14 @@ a.nolink {
 }
 .logo{
     padding: .5rem;
+}
+.logo img{
+    position: absolute;
+}
+.menu-group{
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
 }
 .menu-list{
     display: flex;
@@ -69,8 +96,8 @@ a.nolink {
     border-radius: 2px;
     transition: all 0.3s ease;
 }
-#menu.show>.menu-list>li{
-    display: block !important;
+#menu.show .menu-list{
+    display: flex !important;
     padding-right: 2rem;
 }
 #menu.show #hamburger span:nth-child(1) {
@@ -330,19 +357,7 @@ a.nolink {
     padding: 1rem;
 }
 #contact{
-    position: relative;
     padding-top: 5rem;
-    background-attachment: fixed;
-}
-#contact::before{
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(14, 16, 17, 0.2);
-    z-index: 1;
 }
 #contact>.container>a{
     background: #FFFFFF;
@@ -410,17 +425,22 @@ a.nolink {
     width: 30px;
     height: 30px;
     line-height: 1;
+    cursor: pointer;
+}
+.modal-close:hover{
+    background: #888;
 }
 
 #modal.hidden {
     display: none;
 }
 @media (max-width: 1200px) {
+    .menu-group{
+        padding: 1rem;
+    }
     .menu-list{
         flex-direction: column;
         align-items: flex-end;
-    }
-    .menu-list>li{
         display: none;
     }
     #hamburger{

@@ -69,23 +69,25 @@ function renderMenu() {
         <div class="logo">
             <img src="./assets/img/logos/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;">
         </div>
-        <ul class="menu-list">
+        <div class="menu-group">
             <div id="hamburger"><span></span><span></span><span></span></div>
-            ${appData.menu
-                .map(item => {
-                    const isExternal = item.link.startsWith('http');
-                    const attributes = isExternal 
-                        ? `href="${item.link}" target="_blank" rel="noopener noreferrer"` 
-                        : `href="${item.link}"`;
-                    
-                    const content = item.text.startsWith("icofont") 
-                        ? `<i class="${item.text}"></i>` 
-                        : item.text;
+            <ul class="menu-list">
+                ${appData.menu
+                    .map(item => {
+                        const isExternal = item.link.startsWith('http');
+                        const attributes = isExternal 
+                            ? `href="${item.link}" target="_blank" rel="noopener noreferrer"` 
+                            : `href="${item.link}"`;
+                        
+                        const content = item.text.startsWith("icofont") 
+                            ? `<i class="${item.text}"></i>` 
+                            : item.text;
 
-                    return `<li><a ${attributes} class="menu-item nolink">${content}</a></li>`;
-                })
-                .join('')}
-        </ul>
+                        return `<li><a ${attributes} class="menu-item nolink">${content}</a></li>`;
+                    })
+                    .join('')}
+            </ul>
+        </div>
     `;
     
     if (!document.getElementById('menu-container')) {
@@ -318,6 +320,7 @@ function renderProjects(section){
     const projectsSection = document.getElementById('projects') || document.createElement('section');
     projectsSection.id = 'projects';
     projectsSection.role= 'contentinfo';
+    projectsSection.classList.add('bg');
     if (section.background) projectsSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) projectsSection.style.color = section.font;
     projectsSection.innerHTML = `
@@ -341,7 +344,7 @@ function renderProjects(section){
     }
 }
 
-function renderCollaborations(section){
+function renderIdi(section){
     const idiSection = document.getElementById('idi') || document.createElement('section');
     idiSection.id = 'idi';
     idiSection.role= 'contentinfo';
@@ -373,7 +376,8 @@ function renderCollaborations(section){
 function renderContact(section) {
     const contactSection = document.getElementById('contact') || document.createElement('footer');
     contactSection.id = 'contact';
-    contactSection.role = 'footer';
+    contactSection.role = 'contentinfo';
+    contactSection.classList.add('bg');
     if (section.background) contactSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) contactSection.style.color = section.font;
 
@@ -452,7 +456,7 @@ function renderSections() {
     if (projects) renderProjects(projects);
 
     const idi = appData.sections.find(s => s.id === "#i+d+i");
-    if (idi) renderCollaborations(idi);
+    if (idi) renderIdi(idi);
 
     const contactData = appData.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
