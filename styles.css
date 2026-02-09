@@ -345,7 +345,7 @@ a.nolink {
     width: calc(100% / 3);
     padding: 1rem;
 }
-.project-card>.card {
+.project-card .card {
     padding: 1rem;
 }
 .idi-card{

@@ -153,7 +153,8 @@ function parseData(menu, sections, services, predators, methodology, projects, i
             .map(x => ({
                 enabled: x["Habilitado"],
                 title: x["Título"],
-                description: x["Descripción"]
+                description: x["Descripción"],
+                link: x["Enlace"]
             })),
         idi : idi
             .filter(x => isEnabled(x["Habilitado"]))

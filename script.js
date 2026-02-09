@@ -316,29 +316,44 @@ function renderPredators(section) {
     });
 }
 
-function renderProjects(section){
+function renderProjects(section) {
     const projectsSection = document.getElementById('projects') || document.createElement('section');
     projectsSection.id = 'projects';
-    projectsSection.role= 'contentinfo';
+    projectsSection.role = 'contentinfo';
     projectsSection.classList.add('bg');
+    
     if (section.background) projectsSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) projectsSection.style.color = section.font;
+
     projectsSection.innerHTML = `
-            <div class="container">
-                <div class="grid">
-                    ${appData.projects.map(project => `
-                        <div class="project-card">
-                            <div class="card">
-                                <div class="project-info">
-                                    <h3>${project.title}</h3>
-                                    <p>${project.description}</p>
-                                </div>
+        <div class="container">
+            <div class="grid">
+                ${appData.projects.map(project => {
+                    const hasLink = project.link && project.link.trim() !== "";
+                    const cardContent = `
+                        <div class="card">
+                            <div class="project-info">
+                                <h3>${project.title}</h3>
+                                <p>${project.description}</p>
                             </div>
                         </div>
-                    `).join('')}
-                </div>
+                    `;
+
+                    return `
+                        <div class="project-card">
+                            ${hasLink 
+                                ? `<a href="${project.link}" target="_blank" rel="noopener noreferrer" class="nolink">
+                                     ${cardContent}
+                                   </a>` 
+                                : cardContent
+                            }
+                        </div>
+                    `;
+                }).join('')}
             </div>
-        `;
+        </div>
+    `;
+
     if (!document.getElementById('projects')) {
         document.body.append(projectsSection);
     }
