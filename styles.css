@@ -37,7 +37,7 @@ a.nolink {
     display: flex;
     list-style: none;
     gap: 1rem;
-    margin-right: 1rem;
+    padding-right: 1rem;
     font-weight: 600;
     opacity: .6;
     transition: all 0.5s;
@@ -59,6 +59,7 @@ a.nolink {
 }
 #menu.show>.menu-list>li{
     display: block !important;
+    padding-right: 2rem;
 }
 #menu.show #hamburger span:nth-child(1) {
     transform: translateY(0.50rem) rotate(45deg);
