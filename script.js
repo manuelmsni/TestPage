@@ -187,7 +187,7 @@ function renderServices(section) {
             </div>
             ${appData.services.length > 4 
                 ? `<div id="services-trigger" style="display: none;">
-                        <a class="nolink trigger-button" style="cursor: pointer;">${section.title}</a>
+                        <a href="${section.link}" class="nolink trigger-button" style="cursor: pointer;">${section.title}</a>
                    </div>` 
                 : ``}
         </div> 
