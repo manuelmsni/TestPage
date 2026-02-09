@@ -1,10 +1,71 @@
+function smoothScroll(target, duration) {
+    const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!targetElement) return;
 
+    const menuHeight = document.getElementById('menu')?.offsetHeight || 0;
+    const targetPosition = targetElement.offsetTop - menuHeight;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    let startTime = null;
+
+    function animation(currentTime) {
+        if (startTime === null) startTime = currentTime;
+        const timeElapsed = currentTime - startTime;
+        const run = ease(timeElapsed, startPosition, distance, duration);
+        window.scrollTo(0, run);
+        
+        if (timeElapsed < duration) requestAnimationFrame(animation);
+    }
+
+    function ease(t, b, c, d) {
+        t /= d / 2;
+        if (t < 1) return c / 2 * t * t + b;
+        t--;
+        return -c / 2 * (t * (t - 2) - 1) + b;
+    }
+
+    requestAnimationFrame(animation);
+}
+
+function updateActiveMenu() {
+    const menuItems = Array.from(document.querySelectorAll('.menu-item'))
+        .filter(item => item.getAttribute('href')?.startsWith('#'));
+    
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    const windowHeight = window.innerHeight;
+    const fullHeight = document.documentElement.scrollHeight;
+    const menuHeight = document.getElementById('menu')?.offsetHeight || 0;
+
+    if (scrollPosition + windowHeight >= fullHeight - 10) {
+        menuItems.forEach(link => link.parentElement.classList.remove('active'));
+        const lastItem = menuItems[menuItems.length - 1];
+        if (lastItem) lastItem.parentElement.classList.add('active');
+        return; 
+    }
+
+    menuItems.forEach(item => {
+        const href = item.getAttribute('href');
+        const section = document.querySelector(href);
+        
+        if (section) {
+            const sectionTop = section.offsetTop - menuHeight - 20;
+            const sectionHeight = section.offsetHeight;
+
+            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                menuItems.forEach(link => link.parentElement.classList.remove('active'));
+                item.parentElement.classList.add('active');
+            }
+        }
+    });
+}
 
 function renderMenu() {
     const container = document.getElementById('menu-container') || document.createElement('div');
     container.id = 'menu';
     container.innerHTML = `
-        <div class="logo"><img src="./assets/img/logos/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;"></div>
+        <div class="logo">
+            <img src="./assets/img/logos/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;">
+        </div>
         <ul class="menu-list">
             <div id="hamburger"><span></span><span></span><span></span></div>
             ${appData.menu
@@ -20,25 +81,34 @@ function renderMenu() {
         document.body.appendChild(container);
     }
 
-    var hamburguer = document.getElementById('hamburger');
-    if (hamburguer) {
-        hamburguer.addEventListener('click', function () {
-            var menu = document.getElementById('menu');
-            if (menu) {
-                menu.classList.toggle('show');
-            }
-        });
+    const menuElement = document.getElementById('menu');
+    
+    const hamburger = document.getElementById('hamburger');
+    if (hamburger) {
+        hamburger.onclick = () => menuElement.classList.toggle('show');
     }
 
     const menuItems = container.querySelectorAll('.menu-item');
     menuItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const menu = document.getElementById('menu');
-            if (menu) {
-                menu.classList.remove('show');
+        item.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetElement = document.querySelector(href);
+                if (targetElement) {
+                    smoothScroll(targetElement, 1000);
+                }
+            } 
+            else if (href && (href.startsWith('http') || !href.startsWith('#'))) {
+                e.preventDefault();
+                window.open(href, '_blank', 'noopener,noreferrer');
             }
+
+            if (menuElement) menuElement.classList.remove('show');
         });
     });
+    window.addEventListener('scroll', updateActiveMenu);
 }
 
 function renderHero(section) {
@@ -99,20 +169,15 @@ function renderServices(section) {
     const servicesSection = document.getElementById('services') || document.createElement('section');
     servicesSection.id = 'services';
     if (section.background) servicesSection.style.backgroundImage = `url(${section.background})`;
+    
     servicesSection.innerHTML = `
         <div class="container">
             <div class="grid">
                 ${appData.services.map((service, index) => `
                     <div class="service-card">
-                        <div 
-                            class="card" 
-                            data-index="${index}"
-                            ${service.image ? `style="--hover-bg: url('${service.image}')"` : ``}
-                        >
+                        <div class="card" data-index="${index}" ${service.image ? `style="--hover-bg: url('${service.image}')"` : ``}>
                             <div class="service-info">
-                                <div class="icon">
-                                    <i class="${service.icon} service-icon"></i>
-                                </div>
+                                <div class="icon"><i class="${service.icon} service-icon"></i></div>
                                 <h4>${service.title}</h4>
                                 <p>${service.text}</p>
                             </div>
@@ -122,43 +187,55 @@ function renderServices(section) {
             </div>
             ${appData.services.length > 4 
                 ? `<div id="services-trigger" style="display: none;">
-                        <a class="nolink" style="cursor: pointer;">${section.title}</a>
+                        <a class="nolink trigger-button" style="cursor: pointer;">${section.title}</a>
                    </div>` 
                 : ``}
         </div> 
     `;
 
     const cards = servicesSection.querySelectorAll('.service-card');
+    
     if (appData.services.length > 4) {
         const triggerContainer = servicesSection.querySelector('#services-trigger');
-        const triggerLink = triggerContainer.querySelector('a');
+        const triggerLink = triggerContainer.querySelector('.trigger-button');
+        
+        let isExpanded = false;
+
         const updateVisibility = (showAll) => {
             cards.forEach((card, index) => {
                 card.style.display = (showAll || index < 4) ? 'block' : 'none';
             });
-            if (showAll) {
-                triggerLink.textContent = section.subtitle;
-                triggerLink.removeAttribute('href');
-            } else {
-                triggerLink.textContent = section.title;
-                if (section.link) {
-                    triggerLink.setAttribute('href', section.link);
-                }
-            }
+            triggerLink.textContent = showAll ? section.subtitle : section.title;
+            isExpanded = showAll;
         };
+
         triggerContainer.style.display = 'block';
         updateVisibility(false);
-        triggerLink.addEventListener('click', () => {
-            const isShowingAll = triggerLink.textContent === section.subtitle;
-            updateVisibility(!isShowingAll);
+
+        triggerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation(); 
+
+            if (!isExpanded) {
+                // Mostrar todos (Expandir)
+                updateVisibility(true);
+            } else {
+                // Mostrar menos (Colapsar)
+                updateVisibility(false);
+                setTimeout(() => {
+                    if (section.link) {
+                        const target = document.querySelector(section.link);
+                        if (target) {
+                            smoothScroll(target, 1000);
+                        }
+                    }
+                }, 10); 
+            }
         });
     }
-    if (section.font) {
-        servicesSection.style.color = section.font;
-    }
-    if (!document.getElementById('services')) {
-        document.body.append(servicesSection);
-    }
+
+    if (section.font) servicesSection.style.color = section.font;
+    if (!document.getElementById('services')) document.body.append(servicesSection);
 }
 
 function renderPredators(section) {
