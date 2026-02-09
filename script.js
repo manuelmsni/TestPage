@@ -60,8 +60,9 @@ function updateActiveMenu() {
 }
 
 function renderMenu() {
-    const container = document.getElementById('menu-container') || document.createElement('div');
+    const container = document.getElementById('menu-container') || document.createElement('nav');
     container.id = 'menu';
+    container.role = 'navigation';
     container.innerHTML = `
         <div class="logo">
             <img src="./assets/img/logos/logo.png" width="auto" height="35px" alt="Insectaria" title="Insectaria" style="cursor: pointer;display: list-item; text-align: -webkit-match-parent;">
@@ -69,10 +70,18 @@ function renderMenu() {
         <ul class="menu-list">
             <div id="hamburger"><span></span><span></span><span></span></div>
             ${appData.menu
-                .map(item => item.text.startsWith("icofont") 
-                    ? `<li><a href="${item.link}" class="menu-item nolink"><i class="${item.text}"></i></a></li>`
-                    : `<li><a href="${item.link}" class="menu-item nolink">${item.text}</a></li>`
-                )
+                .map(item => {
+                    const isExternal = item.link.startsWith('http');
+                    const attributes = isExternal 
+                        ? `href="${item.link}" target="_blank" rel="noopener noreferrer"` 
+                        : `href="${item.link}"`;
+                    
+                    const content = item.text.startsWith("icofont") 
+                        ? `<i class="${item.text}"></i>` 
+                        : item.text;
+
+                    return `<li><a ${attributes} class="menu-item nolink">${content}</a></li>`;
+                })
                 .join('')}
         </ul>
     `;
@@ -100,11 +109,7 @@ function renderMenu() {
                     smoothScroll(targetElement, 1000);
                 }
             } 
-            else if (href && (href.startsWith('http') || !href.startsWith('#'))) {
-                e.preventDefault();
-                window.open(href, '_blank', 'noopener,noreferrer');
-            }
-
+            
             if (menuElement) menuElement.classList.remove('show');
         });
     });
@@ -114,6 +119,7 @@ function renderMenu() {
 function renderHero(section) {
     const heroSection = document.getElementById('hero') || document.createElement('section');
     heroSection.id = 'hero';
+    heroSection.role= 'main';
     if (section.background) heroSection.style.backgroundImage = `url(${section.background})`;
     heroSection.innerHTML = `
         <div class="container">
@@ -135,6 +141,7 @@ function renderHero(section) {
 function renderAbout(section) {
     const aboutSection = document.getElementById('about') || document.createElement('section');
     aboutSection.id = 'about';
+    aboutSection.role= 'contentinfo';
     if (section.background) aboutSection.style.backgroundColor = section.background;
     if (section.font) aboutSection.style.color = section.font;
     aboutSection.innerHTML = `
@@ -168,6 +175,7 @@ function renderAbout(section) {
 function renderServices(section) {
     const servicesSection = document.getElementById('services') || document.createElement('section');
     servicesSection.id = 'services';
+    servicesSection.role= 'contentinfo';
     if (section.background) servicesSection.style.backgroundImage = `url(${section.background})`;
     
     servicesSection.innerHTML = `
@@ -241,7 +249,7 @@ function renderServices(section) {
 function renderPredators(section) {
     const predatorsSection = document.getElementById('predators') || document.createElement('section');
     predatorsSection.id = 'portfolio';
-
+    predatorsSection.role= 'contentinfo';
     predatorsSection.innerHTML = `
         <div class="container">
             <div>
@@ -304,37 +312,10 @@ function renderPredators(section) {
     });
 }
 
-function renderContact(section) {
-    const contactSection = document.getElementById('contact') || document.createElement('section');
-    contactSection.id = 'contact';
-
-    if (section.background) contactSection.style.backgroundImage = `url(${section.background})`;
-    if (section.font) contactSection.style.color = section.font;
-
-    contactSection.innerHTML = `
-        <div class="container">
-            <a class='nolink' ${section.link ? `href='${section.link}'`:''}>
-                <div class="icon"><i class="icofont-envelope"></i></div>
-                <div class="contact-content">
-                    ${section.title ? `<h2>${section.title}</h2>` : ''}
-                    ${section.subtitle ? `<h3>${section.subtitle}</h3>`: ''}
-                    ${section.text ? `<h3>${section.text}</h3>`: ''}
-                </div>
-            </a>
-            <p>© Copyright <strong>insectaria.com</strong>. All Rights Reserved</p>
-        </div>
-    `;
-    if (section.font) {
-        contactSection.style.color = section.font;
-    }
-    if (!document.getElementById('contact')) {
-        document.body.append(contactSection);
-    }
-}
-
 function renderProjects(section){
     const projectsSection = document.getElementById('projects') || document.createElement('section');
     projectsSection.id = 'projects';
+    projectsSection.role= 'contentinfo';
     if (section.background) projectsSection.style.backgroundImage = `url(${section.background})`;
     if (section.font) projectsSection.style.color = section.font;
     projectsSection.innerHTML = `
@@ -361,6 +342,7 @@ function renderProjects(section){
 function renderCollaborations(section){
     const idiSection = document.getElementById('idi') || document.createElement('section');
     idiSection.id = 'idi';
+    idiSection.role= 'contentinfo';
     idiSection.innerHTML = `
             <div class="container">
                 <div>
@@ -386,10 +368,39 @@ function renderCollaborations(section){
     }
 }
 
+function renderContact(section) {
+    const contactSection = document.getElementById('contact') || document.createElement('footer');
+    contactSection.id = 'contact';
+    contactSection.role = 'footer';
+    if (section.background) contactSection.style.backgroundImage = `url(${section.background})`;
+    if (section.font) contactSection.style.color = section.font;
+
+    contactSection.innerHTML = `
+        <div class="container">
+            <a class='nolink' ${section.link ? `href='${section.link}'`:''}>
+                <div class="icon"><i class="icofont-envelope"></i></div>
+                <div class="contact-content">
+                    ${section.title ? `<h2>${section.title}</h2>` : ''}
+                    ${section.subtitle ? `<h3>${section.subtitle}</h3>`: ''}
+                    ${section.text ? `<h3>${section.text}</h3>`: ''}
+                </div>
+            </a>
+            <p>© Copyright <strong>insectaria.com</strong>. All Rights Reserved</p>
+        </div>
+    `;
+    if (section.font) {
+        contactSection.style.color = section.font;
+    }
+    if (!document.getElementById('contact')) {
+        document.body.append(contactSection);
+    }
+}
+
 function renderModal() {
     if (document.getElementById('modal')) return;
     const modal = document.createElement('div');
     modal.id = 'modal';
+    modal.role = 'modal';
     modal.classList.add('hidden');
     modal.innerHTML = `
         <div class="modal-window">

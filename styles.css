@@ -6,7 +6,7 @@ body{
     margin: 0;
     font-family: sans-serif;
 }
-section{
+section, footer{
     padding-top: 2rem;
     padding-bottom: 3rem;
     box-sizing: border-box;
