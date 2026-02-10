@@ -1,5 +1,5 @@
 
-                window.appData = {
+window.appData = {
   "menu": [
     {
       "enabled": "15/01/2026",
@@ -275,5 +275,5 @@
   ]
 };
 
-                document.dispatchEvent(new Event("appDataReady"));
+document.dispatchEvent(new Event("appDataReady"));
                 

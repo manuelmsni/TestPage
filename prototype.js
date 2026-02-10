@@ -1,17 +1,29 @@
-async function buildDataStructure() {
-    const configRows = await fetchGoogleSheetsCSVAsJson(window.APP_GID);
-    const ds = {
-        gid: window.APP_GID
-    };
-    configRows.forEach(row => {
-        const name = row.Nombre?.trim();
-        const gid = row.GID?.trim();
+const HASH = "e5f30be69502a1f65f37f7c6a8e644b2b6bbad06864371edfde298174d2a8156";
 
-        if (name && gid) {
-            ds[name] = { gid };
-        }
-    });
-    console.log(JSON.stringify(ds));
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function buildDataStructure() {
+    let ds = null;
+    const hash2 = await sha256(window.APP_GID);
+    if(hash2 == HASH){
+        const configRows = await fetchGoogleSheetsCSVAsJson(window.APP_GID);
+        ds = {
+            gid: window.APP_GID
+        };
+        configRows.forEach(row => {
+            const name = row.Nombre?.trim();
+            const gid = row.GID?.trim();
+
+            if (name && gid) {
+                ds[name] = { gid };
+            }
+        });
+    }
     return ds;
 }
 
@@ -57,7 +69,6 @@ function parseCSV(csv) {
 async function fetchGoogleSheetsCSV(sheetId, sheetGID) {
     const targetUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${sheetGID}`;
     const csv = await fetchFileContent(targetUrl);
-    console.log(`Datos cargados desde la nube (GID: ${sheetGID})`);
     return parseCSV(csv);
 }
 
@@ -78,20 +89,24 @@ async function fetchGoogleSheetsCSVAsJson(sheetId, sheetGID = 0) {
 
 async function loadDataSheet() {
     const ds = await buildDataStructure();
-    try {
-        const [a, b, c, d, e, f, g] = await Promise.all([
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.menu.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.sections.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.services.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.predators.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.methodology.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.projects.gid),
-            fetchGoogleSheetsCSVAsJson(ds.gid, ds.idi.gid)
-        ]);
-        parseData(a, b, c, d, e, f, g);
-    } catch (e) {
-        console.error("Error cargando base de datos:", e);
+    if(ds){
+        try {
+            const [a, b, c, d, e, f, g] = await Promise.all([
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.menu.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.sections.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.services.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.predators.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.methodology.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.projects.gid),
+                fetchGoogleSheetsCSVAsJson(ds.gid, ds.idi.gid)
+            ]);
+            parseData(a, b, c, d, e, f, g);
+            createFloatingSaveButton(window.appData);
+        } catch (e) {
+            console.error("Error cargando base de datos:", e);
+        }
     }
+    document.dispatchEvent(new Event("appDataReady"));
 }
 
 function parseData(menu, sections, services, predators, methodology, projects, idi) {
@@ -164,8 +179,6 @@ function parseData(menu, sections, services, predators, methodology, projects, i
                 description: x["Descripción"]
             })),
     };
-    createFloatingSaveButton(window.appData);
-    document.dispatchEvent(new Event("appDataReady"));
 }
 
 function createFloatingSaveButton(appData) {
@@ -226,18 +239,11 @@ function createFloatingSaveButton(appData) {
             };
             const handle = await window.showSaveFilePicker(options);
             const writable = await handle.createWritable();
-            await writable.write(
-                `
-                window.appData = ${JSON.stringify(appData, null, 2)};
-
-                document.dispatchEvent(new Event("appDataReady"));
-                `
-            );
+            await writable.write(`window.appData = ${JSON.stringify(appData, null, 2)};`);
+            await writable.write('document.dispatchEvent(new Event("appDataReady"));');
             await writable.close();
-            
-            console.log("Archivo guardado con éxito");
         } catch (err) {
-            console.error("El usuario canceló o el navegador no soporta la API", err);
+
         }
     });
     container.appendChild(btn);

@@ -7,7 +7,7 @@ body{
     font-family: sans-serif;
 }
 section, footer{
-    padding-top: 2rem;
+    padding-top: 3rem;
     padding-bottom: 3rem;
     box-sizing: border-box;
     background-repeat: no-repeat;
@@ -110,7 +110,7 @@ a.nolink {
     transform: translateY(-0.50rem) rotate(-45deg);
 }
 #hero{
-    height: 100vh;
+    height: calc(100vh - 3rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -185,7 +185,6 @@ a.nolink {
     display: flex;
     flex-wrap: wrap;
     text-align: center;
-    margin-bottom: 1rem;
     width: 100%;
     max-width: 1200px;
 }
@@ -258,6 +257,7 @@ a.nolink {
     border-radius: .5rem;
     background-color: #FFFFFF;
     font-weight: bold;
+    margin-top: 1rem;
 }
 .icon {
     box-sizing: border-box;
