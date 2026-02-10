@@ -514,7 +514,7 @@ async function load() {
             window.APP_GID = gid;
             script.src = "./prototype.js";
         } else {
-            script.src = "./bd.js";
+            script.src = "./database.js";
         }
         document.head.appendChild(script);
         await waitForAppDataAndDOM();

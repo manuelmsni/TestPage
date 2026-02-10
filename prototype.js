@@ -231,7 +231,7 @@ function createFloatingSaveButton(appData) {
     btn.addEventListener("click", async () => {
         try {
             const options = {
-                suggestedName: 'bd.js',
+                suggestedName: 'database.js',
                 types: [{
                     description: 'JavaScript File',
                     accept: {'application/javascript': ['.js']},
