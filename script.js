@@ -32,34 +32,50 @@ function smoothScroll(target, duration = 800) {
 function updateActiveMenu() {
     const menuItems = Array.from(document.querySelectorAll('.menu-item'))
         .filter(item => item.getAttribute('href')?.startsWith('#'));
-    
-    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+    const scrollY = window.scrollY || document.documentElement.scrollTop;
     const windowHeight = window.innerHeight;
     const fullHeight = document.documentElement.scrollHeight;
-    const menuHeight = document.getElementById('menu')?.offsetHeight || 0;
 
-    if (scrollPosition + windowHeight >= fullHeight - 10) {
-        menuItems.forEach(link => link.parentElement.classList.remove('active'));
-        const lastItem = menuItems[menuItems.length - 1];
-        if (lastItem) lastItem.parentElement.classList.add('active');
-        return; 
-    }
+    const viewportCenter = scrollY + (windowHeight / 2);
+
+    let closestItem = null;
+    let closestDistance = Infinity;
 
     menuItems.forEach(item => {
         const href = item.getAttribute('href');
         const section = document.querySelector(href);
-        
-        if (section) {
-            const sectionTop = section.offsetTop - menuHeight - 20;
-            const sectionHeight = section.offsetHeight;
 
-            if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                menuItems.forEach(link => link.parentElement.classList.remove('active'));
-                item.parentElement.classList.add('active');
-            }
+        if (!section) return;
+
+        const sectionTop = section.offsetTop;
+        const sectionCenter = sectionTop + (section.offsetHeight / 2);
+
+        const distance = Math.abs(sectionCenter - viewportCenter);
+
+        if (distance < closestDistance) {
+            closestDistance = distance;
+            closestItem = item;
         }
     });
+
+    menuItems.forEach(link => link.parentElement.classList.remove('active'));
+
+    if (closestItem) {
+        closestItem.parentElement.classList.add('active');
+    }
+
+    const nearBottom = scrollY + windowHeight >= fullHeight - 10;
+
+    if (nearBottom) {
+        const anyActive = menuItems.some(i => i.parentElement.classList.contains('active'));
+        if (!anyActive) {
+            const lastItem = menuItems[menuItems.length - 1];
+            if (lastItem) lastItem.parentElement.classList.add('active');
+        }
+    }
 }
+
 
 function renderMenu() {
     const container = document.getElementById('menu-container') || document.createElement('nav');
