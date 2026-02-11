@@ -520,13 +520,19 @@ a.nolink {
     }
 }
 @media (max-width: 950px) {
+    .methodology-entry {
+        width: 50%;
+    }
     .service-card{
         width: 50%;
     }
     .predator-card{
         width: 50%;
     }
-    .methodology-entry {
+    .project-card{
+        width: 50%;
+    }
+    .idi-card{
         width: 50%;
     }
     .methodology-content > div:nth-child(2n)::after {
@@ -534,13 +540,19 @@ a.nolink {
     }
 }
 @media (max-width: 750px) {
+    .methodology-entry {
+        width: 100%;
+    }
     .service-card{
         width: 100%;
     }
     .predator-card{
         width: 100%;
     }
-    .methodology-entry {
+    .project-card{
+        width: 100%;
+    }
+    .idi-card{
         width: 100%;
     }
     .methodology-content > div:nth-child(1n)::after {
