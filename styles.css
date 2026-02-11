@@ -58,6 +58,7 @@ a.nolink {
 }
 .logo img{
     position: absolute;
+    max-width: calc(100% - 1rem);
 }
 .menu-group{
     display: flex;
@@ -161,12 +162,14 @@ a.nolink {
     width: 100%;
     display: flex;
     margin-top: 1rem;
-    justify-content: space-around;
+    justify-content: center;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
 }
 .methodology-entry {
     padding: 1rem;
+    box-sizing: border-box;
+    max-width: 25%;
 }
 .methodology-entry i{    
     display: inline-block;
@@ -452,20 +455,31 @@ a.nolink {
 }
 @media (max-width: 950px) {
     .service-card{
-        width: calc(100% / 2);
+        width: 50%;
     }
     .predator-card{
-        width: calc(100% / 2);
+        width: 50%;
     }
-    .methodology-content{
-        flex-direction: column;
+    .methodology-entry {
+        max-width: 50%;
     }
 }
 @media (max-width: 750px) {
     .service-card{
-        width: calc(100% / 1);
+        width: 100%;
     }
     .predator-card{
-        width: calc(100% / 1);
+        width: 100%;
+    }
+    .methodology-entry {
+        max-width: 100%;
+    }
+}
+@media (max-width: 290px) {
+    #menu {
+        flex-direction: column;
+    }
+    .logo {
+        height: 1.5rem;
     }
 }
