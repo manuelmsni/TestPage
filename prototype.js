@@ -160,6 +160,9 @@ function parseData(menu, sections, services, predators, methodology, projects, i
                 state: x["Estadio"],
                 description: x["Descripción"],
                 image: x["Imagen"],
+                modal: String(x["Modal"] ?? "")
+                    .trim()
+                    .toLowerCase() === "si",
                 price: x["Precio"],
                 sheet: x["Ficha"],
             })),

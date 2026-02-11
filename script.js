@@ -315,7 +315,7 @@ function renderPredators(section) {
             <div class="grid">
                 ${appData.predators.map((predator, index) => `
                     <div class="predator-card">
-                        <div class="card ${(predator.sheet || predator.price) ? 'clickable-card' : ''}" data-index="${index}">                            ${predator.image ? `<div class="predator-image"><img src="https://insectaria.com/${predator.image}" alt="${predator.name}"></div>` : ''}
+                        <div class="card ${(predator.modal && (predator.sheet || predator.price)) ? 'clickable-card' : ''}" data-index="${index}">                            ${predator.image ? `<div class="predator-image"><img src="https://insectaria.com/${predator.image}" alt="${predator.name}"></div>` : ''}
                             <div class="predator-info">
                                 <h3><i>${predator.name}</i></h3>
                                 <h4>${predator.state}</h4>
