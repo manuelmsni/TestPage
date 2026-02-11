@@ -8,9 +8,20 @@ body{
 }
 h2 {
     font-size: 200%;
+    z-index: 3;
+    position: relative;
 }
 h3 {
     font-weight: normal;
+}
+.title-shadow {
+    position: absolute;
+    color: rgba(238, 240, 242, 0.7);
+    left: 0;
+    right: 0;
+    font-weight: 700;
+    font-size: 52px;
+    text-align: center;
 }
 section, footer{
     padding-top: 3rem;
@@ -179,9 +190,24 @@ a.nolink {
     flex-wrap: wrap;
 }
 .methodology-entry {
+    position: relative;
     padding: 1rem;
     box-sizing: border-box;
     width: 25%;
+}
+.methodology-content > div::after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 0;
+    top: calc(50% - 20px);
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    transform: rotate(315deg);
+}
+.methodology-content > div:nth-child(4n)::after {
+    content: none;
 }
 .methodology-entry h3 {
     font-weight: bolder;
@@ -412,8 +438,18 @@ a.nolink {
     padding: 1rem;
     overflow-y: hidden;
 }
-#modal-title {
-    margin-left:1rem;
+#modal hr {
+    width: Calc(100% - 4rem);
+    margin-bottom: 2rem;
+}
+#modal h2 {
+    text-align: center;
+    margin-left: 1rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+#modal .title-shadow{
+    margin-top: 1rem;
 }
 .modal-window {
     background: white;
@@ -451,10 +487,9 @@ a.nolink {
 }
 .modal-close {
     position: absolute;
-    top: 10px;
-    right: 15px;
+    top: 1rem;
+    right: 1rem;
     z-index: 10;
-    background: white;
     border-radius: 50%;
     width: 30px;
     height: 30px;
@@ -462,9 +497,9 @@ a.nolink {
     cursor: pointer;
 }
 .modal-close:hover{
-    background: #888;
+    overflow: visible;
+    background: #d3d3d3;
 }
-
 #modal.hidden {
     display: none;
 }
@@ -494,6 +529,9 @@ a.nolink {
     .methodology-entry {
         width: 50%;
     }
+    .methodology-content > div:nth-child(2n)::after {
+        content: none;
+    }
 }
 @media (max-width: 750px) {
     .service-card{
@@ -504,6 +542,9 @@ a.nolink {
     }
     .methodology-entry {
         width: 100%;
+    }
+    .methodology-content > div:nth-child(1n)::after {
+        content: none;
     }
 }
 @media (max-width: 290px) {

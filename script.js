@@ -196,7 +196,7 @@ function renderAbout(section) {
     aboutSection.innerHTML = `
         <div class="container">
             <div class="about-content">
-                ${section.title ? `<h2>${section.title}</h2>` : ''}
+                ${section.title ? `<span class="title-shadow">${section.title}</span><h2>${section.title}</h2>` : ''}
                 <div class="description">
                     <h3>${section.text}</h3>
                 </div>
@@ -305,6 +305,7 @@ function renderPredators(section) {
     predatorsSection.innerHTML = `
         <div class="container">
             <div>
+                <span class="title-shadow">${section.title}</span>
                 <h2>${section.title}</h2>
                 <p>${section.text}</p>
             </div>
@@ -358,7 +359,7 @@ function renderPredators(section) {
                         ${predator.sheet ? predator.sheet.split('\n').map(line => `<p>${line.trim()}</p>`).join(''): ''}
                     </div>
                 `;
-                modal(predator.name, modalContent);
+                modal(`<i>${predator.name}</i> - ${predator.state}`, modalContent);
             });
         }
     });
@@ -415,6 +416,7 @@ function renderIdi(section){
     idiSection.innerHTML = `
             <div class="container">
                 <div>
+                    <span class="title-shadow">${section.title}</span>
                     <h2>${section.title}</h2>
                     <p>${section.text}</p>
                 </div>
@@ -475,7 +477,9 @@ function renderModal() {
     modal.innerHTML = `
         <div class="modal-window">
             <button class="modal-close">✖</button>
-            <h2 id="modal-title"></h2>
+            <span class="modal-title title-shadow"></span>
+            <h2 class="modal-title"></h2>
+            <hr>
             <div class="modal-content" id="modal-content"></div>
         </div>
     `;
@@ -489,7 +493,7 @@ function renderModal() {
 }
 function modal(title, htmlContent) {
     const modal = document.getElementById('modal');
-    document.getElementById('modal-title').textContent = title;
+    document.querySelectorAll('.modal-title').forEach(item => item.innerHTML = title);
     document.getElementById('modal-content').innerHTML = htmlContent;
 
     modal.classList.remove('hidden');
