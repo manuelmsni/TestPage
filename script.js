@@ -335,6 +335,7 @@ function renderProjects(section) {
                             <div class="project-info">
                                 <h3>${project.title}</h3>
                                 <p>${project.description}</p>
+                                ${hasLink ? '<p>(<span>Ir al enlace</span>)</p>' : ""}
                             </div>
                         </div>
                     `;

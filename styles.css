@@ -6,6 +6,9 @@ body{
     margin: 0;
     font-family: sans-serif;
 }
+h3 {
+    font-weight: normal;
+}
 section, footer{
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -39,6 +42,9 @@ section, footer{
     flex-direction: column;
     align-items: center;
     text-align: center;
+}
+.container > div:not(.grid) {
+  padding-inline: 1rem;
 }
 a.nolink {
     text-decoration: none;
@@ -152,7 +158,6 @@ a.nolink {
 
 #hero h3{
     font-size: clamp(18px, 3vw, 40px);
-    font-weight: normal;
     margin: 0.5em 0 0 0;
     overflow-wrap: break-word;
     word-break: break-word;
@@ -169,7 +174,7 @@ a.nolink {
 .methodology-entry {
     padding: 1rem;
     box-sizing: border-box;
-    max-width: 25%;
+    width: 25%;
 }
 .methodology-entry i{    
     display: inline-block;
@@ -352,6 +357,11 @@ a.nolink {
 .project-card .card {
     padding: 1rem;
 }
+.project-info > p > span {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #2AD7A8;
+}
 .idi-card{
     box-sizing: border-box;
     width: calc(100% / 3);
@@ -362,6 +372,7 @@ a.nolink {
 }
 #contact{
     padding-top: 5rem;
+    padding-inline: 1rem;
 }
 #contact>.container>a{
     background: #FFFFFF;
@@ -462,7 +473,7 @@ a.nolink {
         width: 50%;
     }
     .methodology-entry {
-        max-width: 50%;
+        width: 50%;
     }
 }
 @media (max-width: 750px) {
@@ -473,7 +484,7 @@ a.nolink {
         width: 100%;
     }
     .methodology-entry {
-        max-width: 100%;
+        width: 100%;
     }
 }
 @media (max-width: 290px) {
