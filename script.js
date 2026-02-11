@@ -1,14 +1,33 @@
+var autoScrolling = null;
+
 function smoothScroll(target, duration = 800) {
     const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
     if (!targetElement) return;
 
+    Array.from(document.querySelectorAll('.menu-item'))
+        .filter(item => item.getAttribute('href')?.startsWith('#'))
+        .forEach(item => {
+            const href = item.getAttribute('href');
+            if (href === `#${targetElement.id}`) {
+                autoScrolling = item;
+                autoScrolling.parentElement.classList.add('active');
+            } else {
+                item.parentElement.classList.remove('active');
+            }
+            
+        });
+
     const menuHeight = document.getElementById('menu')?.offsetHeight || 0;
-    const targetPosition = targetElement.offsetTop - menuHeight;
-    const startPosition = window.pageYOffset;
+    const targetPosition = Math.round(targetElement.offsetTop - menuHeight);
+    const startPosition = Math.round(window.pageYOffset);
     const distance = targetPosition - startPosition;
-    
+
+    if (Math.abs(distance) < 2) {
+        activateMenuLink();
+        return;
+    }
+
     const adjustedDuration = Math.min(Math.abs(distance) * 0.8, duration);
-    
     let startTime = null;
 
     function animation(currentTime) {
@@ -18,6 +37,8 @@ function smoothScroll(target, duration = 800) {
         window.scrollTo(0, run);
         if (timeElapsed < adjustedDuration) {
             requestAnimationFrame(animation);
+        } else {
+            activateMenuLink(targetElement);
         }
     }
 
@@ -27,9 +48,17 @@ function smoothScroll(target, duration = 800) {
     }
 
     requestAnimationFrame(animation);
+
+    function activateMenuLink() {
+        if(autoScrolling){
+            autoScrolling.parentElement.classList.add('active');
+            autoScrolling = null;
+        }
+    }
 }
 
 function updateActiveMenu() {
+    if(autoScrolling) return;
     const menuItems = Array.from(document.querySelectorAll('.menu-item'))
         .filter(item => item.getAttribute('href')?.startsWith('#'));
 
