@@ -126,7 +126,7 @@ a.nolink {
     align-items: center;
     color: #FFFFFF;
     position: relative;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.15);
 }
 #hero::before{
     content: "";
@@ -213,6 +213,9 @@ a.nolink {
     box-sizing: border-box;
     height: 100%;
     background-color: #FFFFFF;
+}
+.bg .card{
+    border-radius: 1rem;
 }
 #services{
     position: relative;
@@ -318,6 +321,7 @@ a.nolink {
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    background-color: #f7f7f7;
 }
 .predator-info>*{
     padding: 0;

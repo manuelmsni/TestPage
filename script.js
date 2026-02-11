@@ -196,7 +196,10 @@ function renderServices(section) {
     const servicesSection = document.getElementById('services') || document.createElement('section');
     servicesSection.id = 'services';
     servicesSection.role= 'contentinfo';
-    if (section.background) servicesSection.style.backgroundImage = `url(${section.background})`;
+    if (section.background){
+        servicesSection.style.backgroundImage = `url(${section.background})`;
+        servicesSection.classList.add('bg');
+    }
     
     servicesSection.innerHTML = `
         <div class="container">
