@@ -1,4 +1,3 @@
-
 window.appData = {
   "menu": [
     {
@@ -30,6 +29,11 @@ window.appData = {
       "enabled": "15/01/2026",
       "text": "icofont-instagram",
       "link": "https://www.instagram.com/insectariacb"
+    },
+    {
+      "enabled": "15/01/2026",
+      "text": "icofont-linkedin",
+      "link": ""
     }
   ],
   "sections": [
@@ -58,7 +62,7 @@ window.appData = {
     {
       "enabled": "15/01/2026",
       "internal": "Información de la empresa",
-      "title": "¿Qué hacemos?",
+      "title": "¿QUÉ HACEMOS?",
       "subtitle": "--",
       "text": "En Insectaria aplicamos los resultados de la investigación para dar solución a los problemas y necesidades generados por insectos y ácaros.",
       "background": "#FFFFFF",
@@ -80,7 +84,7 @@ window.appData = {
     {
       "enabled": "15/01/2026",
       "internal": "Depredadores",
-      "title": "Nuestros Depredadores",
+      "title": "NUESTROS DEPREDADORES",
       "subtitle": "--",
       "text": "Actualmente comercializamos estos insectos depredadores:",
       "background": "#FFFFFF",
@@ -92,7 +96,7 @@ window.appData = {
       "enabled": "15/01/2026",
       "internal": "Contacto",
       "title": "Contacta con nosotros",
-      "subtitle": "Estamos en logroño",
+      "subtitle": "📌 Estamos en Logroño",
       "text": "info@insectaria.com",
       "background": "assets/img/sections/contact.jpg",
       "font": "#444444",
@@ -138,7 +142,7 @@ window.appData = {
       "icon": "icofont-bug"
     },
     {
-      "enabled": "15/01/2026",
+      "enabled": "16/01/2026",
       "title": "Biodiversidad",
       "text": "Estudios de biodiversidad y fauna auxiliar",
       "image": "assets/img/services/6.png",
@@ -152,14 +156,14 @@ window.appData = {
       "icon": "icofont-users-alt-3"
     },
     {
-      "enabled": "15/01/2026",
+      "enabled": "16/01/2026",
       "title": "Seguimientos",
       "text": "Monitorización y seguimiento de artrópodos",
       "image": "assets/img/services/3.jpg",
       "icon": "icofont-search-2"
     },
     {
-      "enabled": "15/01/2026",
+      "enabled": "17/01/2026",
       "title": "Identificación",
       "text": "Identificación taxonomica de insectos y ácaros",
       "image": "assets/img/services/5.jpg",
@@ -173,8 +177,8 @@ window.appData = {
       "state": "Adulto",
       "description": "Depredador de psílidos",
       "image": "assets/img/portfolio/Anthocoris-nemoralis.jpg",
-      "price": "",
-      "sheet": ""
+      "price": "PVP | Unidades\n10€ | 100\n15€ | 250",
+      "sheet": "<b>Máxima voracidad:</b> Actúa como un depredador de élite sobre todos los estadios de la psila (huevo, ninfa y adulto). Su capacidad para limpiar ninfas productoras de melaza reduce drásticamente el riesgo de negrilla, revalorizando la calidad comercial de la fruta.\n<b>Potencial colonizador:</b> Su potente capacidad de vuelo le permite una distribución autónoma y uniforme. Detectando los focos exactos de infección mediante sensores químicos, garantizando una intervención dirigida. No solo elimina la plaga actual, con puestas de hasta 200 huevos protegidos dentro del tejido vegetal, establece una población residente que actúa como un sistema de vigilancia permanente.\n<b>Rentabilidad:</b> Representa la base del Control Integrado en peral. Permite reducir la dependencia de químicos de síntesis, evitando resistencias y cumpliendo con los estándares de residuo cero más exigentes del mercado."
     },
     {
       "enabled": "15/01/2026",
@@ -182,7 +186,7 @@ window.appData = {
       "state": "Ninfa",
       "description": "Depredador de psílidos",
       "image": "assets/img/portfolio/Anthocoris-nemoralis-ninfa.jpg",
-      "price": "",
+      "price": "PVP | Unidades\n10€ | 100\n15€ | 250",
       "sheet": ""
     },
     {
@@ -192,7 +196,7 @@ window.appData = {
       "description": "Depredador de trips",
       "image": "assets/img/portfolio/Orius-laevigatus.jpg",
       "price": "",
-      "sheet": ""
+      "sheet": "<b>Máxima voracidad</b>: Actúa como un depredador polífago de élite, con una preferencia voraz por todos los estadios de los trips (larvas y adultos), así como por ácaros, pulgones y huevos de lepidópteros. Su capacidad para atacar incluso cuando no tiene hambre (matanza refleja) garantiza un desplome rápido de las poblaciones de plaga, protegiendo la flor y el fruto desde el primer momento.\n<b>Potencial colonizador</b>: Su gran movilidad y agilidad le permiten rastrear activamente las flores, donde se refugia y se alimenta de polen en ausencia de presas, lo que le permite establecerse de forma preventiva. Con una puesta de huevos estratégica dentro del tejido vegetal, genera una descendencia constante que patrulla el cultivo. Esta capacidad de \"espera\" lo convierte en un escudo biológico activo que detecta y neutraliza cualquier foco antes de que se convierta en infestación.\n<b>Rentabilidad</b>: Es el pilar fundamental del Control Integrado en cultivos hortícolas y ornamentales. Su eficacia permite minimizar los tratamientos químicos preventivos, reduciendo costes operativos y asegurando el cumplimiento de las normativas de seguridad alimentaria. Al ser un aliado natural de alta persistencia, maximiza el rendimiento de la cosecha con un perfil de residuo cero, abriendo las puertas a los mercados más exigentes."
     },
     {
       "enabled": "15/01/2026",
@@ -252,28 +256,27 @@ window.appData = {
   "projects": [
     {
       "enabled": "15/01/2026",
-      "title": "Test",
-      "description": "Test 1"
+      "title": "Premio al mejor emprendedor",
+      "description": "Reconocimiento de la Universidad de La Rioja con el Premio al Mejor Emprendedor por nuestra innovación en control biológico de plagas.",
+      "link": "https://www.unirioja.es/insectaria-gana-el-premio-al-mejor-emprendedor-2018"
     },
     {
       "enabled": "16/01/2026",
-      "title": "Test",
-      "description": "Test 2"
+      "title": "Colaboración con UR",
+      "description": "Colaboración con la Universidad de La Rioja en investigación y formación en control biológico.",
+      "link": "https://www.unirioja.es/insectaria-suscribe-un-convenio-de-colaboracion-con-la-ur"
     }
   ],
   "idi": [
     {
       "enabled": "15/01/2026",
-      "title": "Test",
-      "description": "Test 1"
+      "title": "Proyecto 1",
+      "description": "Detalles del proyecto 1."
     },
     {
       "enabled": "16/01/2026",
-      "title": "Test",
-      "description": "Test 2"
+      "title": "Proyecto 2",
+      "description": "Detalles del proyecto 2."
     }
   ]
-};
-
-document.dispatchEvent(new Event("appDataReady"));
-                
+};document.dispatchEvent(new Event("appDataReady"));

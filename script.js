@@ -119,11 +119,14 @@ function renderMenu() {
             <ul class="menu-list">
                 ${appData.menu
                     .map(item => {
-                        const isExternal = item.link.startsWith('http');
-                        const attributes = isExternal 
-                            ? `href="${item.link}" target="_blank" rel="noopener noreferrer"` 
-                            : `href="${item.link}"`;
-                        
+                        var attributes = ''
+                        if(item.link){
+                            const isExternal = item.link.startsWith('http');
+                            attributes = isExternal 
+                                ? `href="${item.link}" target="_blank" rel="noopener noreferrer"` 
+                                : `href="${item.link}"`;
+                        }
+
                         const content = item.text.startsWith("icofont") 
                             ? `<i class="${item.text}"></i>` 
                             : item.text;
