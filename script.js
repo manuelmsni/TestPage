@@ -453,6 +453,7 @@ function closeModal() {
 }
 
 function renderSections() {
+    renderModal();
     renderMenu();
 
     const heroData = appData.sections.find(s => s.id === "#hero");
@@ -475,8 +476,6 @@ function renderSections() {
 
     const contactData = appData.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
-
-    renderModal();
 }
 
 function debug(data){

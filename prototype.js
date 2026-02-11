@@ -251,3 +251,18 @@ function createFloatingSaveButton(appData) {
 }
 
 loadDataSheet();
+
+const render = renderSections;
+
+renderSections = function(){
+    render();
+    modal(
+  "Prototipo",
+  "<p><strong>Entorno de prototipado</strong></p>\
+   <p> \
+       Esta aplicación se encuentra en fase de validación funcional. \
+       Los datos mostrados pueden no ser definitivos y podrían contener inexactitudes. \
+       <strong>No debe utilizarse como referencia oficial<strong>. \
+   </p>"
+);
+}
