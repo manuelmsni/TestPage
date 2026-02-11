@@ -172,7 +172,7 @@ function renderHero(section) {
     if (section.background) heroSection.style.backgroundImage = `url(${section.background})`;
     heroSection.innerHTML = `
         <div class="container">
-            <a class="nolink" ${section.link ? `href="${section.link}"` : ''}>
+            <a class="nolink" ${section.link ? `onclick="smoothScroll('${section.link}')"` : ''}>
                 <h1>${section.title}</h1>
                 <h2>${section.subtitle}</h2>
                 <h3>${section.text}</h3>
@@ -563,6 +563,15 @@ async function load() {
             script.src = "./prototype.js";
         } else {
             script.src = "./database.js";
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            document.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+            });
+            document.addEventListener('dragstart', function(e) {
+                e.preventDefault();
+            });
         }
         document.head.appendChild(script);
         await waitForAppDataAndDOM();
