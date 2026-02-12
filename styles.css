@@ -440,7 +440,7 @@ a.nolink {
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     display: flex;
     flex-direction: column;
-    max-height: calc(100dvh - 2rem);
+    max-height: calc(100dvh - 4rem);
     overflow: hidden;
 }
 #modal hr {
