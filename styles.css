@@ -91,6 +91,9 @@ a.nolink {
 .logo img{
     position: absolute;
     max-width: calc(100% - 1rem);
+    height: auto;
+    max-height: 2rem;
+    aspect-ratio: 6 / 1;
 }
 .menu-group{
     display: flex;
@@ -605,7 +608,23 @@ h2.text-shadow {
     .idi-card{
         width: 100%;
     }
+    .methodology-content > div::after {
+        content: "";
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: auto;
+        right: calc(50% - 10px);
+        border-right: 1px solid black;
+        border-bottom: 1px solid black;
+    }
+    .methodology-content > div:nth-child(2n)::after {
+        content: "";
+    }
     .methodology-content > div:nth-child(1n)::after {
+        transform: rotate(45deg);
+    }
+    .methodology-content > div:last-child::after {
         content: none;
     }
 }
