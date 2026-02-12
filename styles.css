@@ -122,7 +122,7 @@ a.nolink {
     transform: translateY(-0.50rem) rotate(-45deg);
 }
 #hero{
-    height: calc(100vh - 3rem);
+    height: calc(100dvh - 3rem);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -429,6 +429,20 @@ a.nolink {
     padding: 1rem;
     overflow-y: hidden;
 }
+.modal-window {
+    background: white;
+    width: 100%;
+    max-width: 1000px;
+    border-radius: .5rem;
+    padding: 0;
+    padding-top: 2rem;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - 2rem);
+    overflow: hidden;
+}
 #modal hr {
     width: Calc(100% - 4rem);
     margin-bottom: 2rem;
@@ -441,20 +455,7 @@ a.nolink {
 #modal .title-shadow{
     margin-top: 1rem;
 }
-.modal-window {
-    background: white;
-    width: 100%;
-    max-width: 1000px;
-    border-radius: .5rem;
-    padding: 0;
-    padding-top: 2rem;
-    position: relative;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    display: flex;
-    flex-direction: column;
-    max-height: calc(100vh - 2rem);
-    overflow: hidden;
-}
+
 .modal-content {
     padding: 1.5rem; 
     padding-top: 0;
