@@ -428,6 +428,7 @@ a.nolink {
     z-index: 9999;
     padding: 1rem;
     overflow-y: hidden;
+    height: 200dvh;
 }
 .modal-window {
     background: white;
