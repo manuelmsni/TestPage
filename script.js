@@ -117,7 +117,7 @@ function renderMenu() {
         <div class="menu-group">
             <div id="hamburger"><span></span><span></span><span></span></div>
             <ul class="menu-list">
-                ${appData.menu
+                ${database.menu
                     .map(item => {
                         var attributes = ''
                         if(item.link){
@@ -204,9 +204,9 @@ function renderAbout(section) {
                     <h3>${section.text}</h3>
                 </div>
             </div>
-            ${ appData.methodology && appData.methodology.length > 0 ?
+            ${ database.methodology && database.methodology.length > 0 ?
             `<div class="methodology-content">
-                ${appData.methodology.map((methodology, index) => `
+                ${database.methodology.map((methodology, index) => `
                 <div class="methodology-entry">
                     <i class="${methodology.icon} methodology-icon"></i>
                     <h3>${methodology.text}</h3>
@@ -236,7 +236,7 @@ function renderServices(section) {
     servicesSection.innerHTML = `
         <div class="container">
             <div class="grid">
-                ${appData.services.map((service, index) => `
+                ${database.services.map((service, index) => `
                     <div class="service-card">
                         <div class="card" data-index="${index}" ${service.image ? `style="--hover-bg: url('${service.image}')"` : ``}>
                             <div class="service-info">
@@ -248,7 +248,7 @@ function renderServices(section) {
                     </div>
                 `).join('')}
             </div>
-            ${appData.services.length > 4 
+            ${database.services.length > 4 
                 ? `<div id="services-trigger" style="display: none;">
                         <a href="${section.link}" class="nolink trigger-button" style="cursor: pointer;">${section.title}</a>
                    </div>` 
@@ -258,7 +258,7 @@ function renderServices(section) {
 
     const cards = servicesSection.querySelectorAll('.service-card');
     
-    if (appData.services.length > 4) {
+    if (database.services.length > 4) {
         const triggerContainer = servicesSection.querySelector('#services-trigger');
         const triggerLink = triggerContainer.querySelector('.trigger-button');
         
@@ -312,7 +312,7 @@ function renderPredators(section) {
                 <p>${section.text}</p>
             </div>
             <div class="grid">
-                ${appData.predators.map((predator, index) => `
+                ${database.predators.map((predator, index) => `
                     <div class="predator-card">
                         <div class="card ${(predator.modal && (predator.sheet || predator.price)) ? 'clickable-card' : ''}" data-index="${index}">                            ${predator.image ? `<div class="predator-image"><img src="https://insectaria.com/${predator.image}" alt="${predator.name}"></div>` : ''}
                             <div class="predator-info">
@@ -332,7 +332,7 @@ function renderPredators(section) {
     const cards = predatorsSection.querySelectorAll('.card.clickable-card');
     cards.forEach(card => {
         const index = card.getAttribute('data-index');
-        const predator = appData.predators[index];
+        const predator = database.predators[index];
 
         if(predator.price || predator.sheet){
             card.style.cursor = 'pointer';
@@ -379,7 +379,7 @@ function renderProjects(section) {
     projectsSection.innerHTML = `
         <div class="container">
             <div class="grid">
-                ${appData.projects.map(project => {
+                ${database.projects.map(project => {
                     const hasLink = project.link && project.link.trim() !== "";
                     const cardContent = `
                         <div class="card">
@@ -422,7 +422,7 @@ function renderIdi(section){
                     <p>${section.text}</p>
                 </div>
                 <div class="grid">
-                    ${appData.idi.map(idi => `
+                    ${database.idi.map(idi => `
                         <div class="idi-card">
                             <div class="card">
                                 <div class="idi-info">
@@ -529,25 +529,25 @@ function renderSections() {
     
     renderMenu();
     
-    const heroData = appData.sections.find(s => s.id === "#hero");
+    const heroData = database.sections.find(s => s.id === "#hero");
     if (heroData) renderHero(heroData);
 
-    const aboutData = appData.sections.find(s => s.id === "#about");
+    const aboutData = database.sections.find(s => s.id === "#about");
     if (aboutData) renderAbout(aboutData);
 
-    const servicesData = appData.sections.find(s => s.id === "#services");
+    const servicesData = database.sections.find(s => s.id === "#services");
     if (servicesData) renderServices(servicesData);
 
-    const portfolio = appData.sections.find(s => s.id === "#portfolio");
-    if (portfolio && appData.predators) renderPredators(portfolio);
+    const portfolio = database.sections.find(s => s.id === "#portfolio");
+    if (portfolio && database.predators) renderPredators(portfolio);
 
-    const projects = appData.sections.find(s => s.id === "#projects");
+    const projects = database.sections.find(s => s.id === "#projects");
     if (projects) renderProjects(projects);
 
-    const idi = appData.sections.find(s => s.id === "#i+d+i");
+    const idi = database.sections.find(s => s.id === "#i+d+i");
     if (idi) renderIdi(idi);
 
-    const contactData = appData.sections.find(s => s.id === "#contact");
+    const contactData = database.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
 
     document.querySelectorAll(".text-shadow").forEach(item => {
@@ -557,12 +557,44 @@ function renderSections() {
     renderModal();
 }
 
+function isEnabled(dateStr, filterFutureDates = false){
+    if (!dateStr || dateStr == "") return false;
+    var enabled = true;
+    if(filterFutureDates == true){
+        const activationDate = new Date(dateStr.split('/').reverse().join('-'));
+        enabled = activationDate <= new Date();
+    }
+    return enabled;
+};
+
 function debug(data){
-    console.log("APPDATA:", data);
+    console.log("database:", data);
     document.body.innerHTML = `
         <pre id="debug"></pre>
     `;
-    document.getElementById("debug").textContent = JSON.stringify(appData, null, 2);
+    document.getElementById("debug").textContent = JSON.stringify(data, null, 2);
+}
+
+function cleanAppData() {
+  const original = window.appData;
+  if (!original) return null;
+  const result = {};
+  for (const key in original) {
+    if (Object.prototype.hasOwnProperty.call(original, key)) {
+      const value = original[key];
+      if (Array.isArray(value)) {
+        result[key] = value
+          .filter(item => {
+            return !item.hasOwnProperty('enabled') || isEnabled(item.enabled, true);
+          })
+          .map(item => ({ ...item }));
+      } else {
+        result[key] = value;
+      }
+    }
+  }
+
+  return result;
 }
 
 function waitForAppDataAndDOM({ timeout = 10000, interval = 20 } = {}) {
@@ -574,7 +606,7 @@ function waitForAppDataAndDOM({ timeout = 10000, interval = 20 } = {}) {
             }
 
             if (Date.now() - start > timeout) {
-                return reject(new Error("Timeout esperando DOM o appData"));
+                return reject(new Error("Timeout esperando DOM o database"));
             }
 
             setTimeout(check, interval);
@@ -608,6 +640,7 @@ async function load() {
         }
         document.head.appendChild(script);
         await waitForAppDataAndDOM();
+        window.database = cleanAppData();
         renderSections();
     }catch(err){
         console.error(err);

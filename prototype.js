@@ -110,11 +110,6 @@ async function loadDataSheet() {
 }
 
 function parseData(menu, sections, services, predators, methodology, projects, idi) {
-    const isEnabled = (dateStr) => {
-        if (!dateStr || dateStr == "") return false;
-        const activationDate = new Date(dateStr.split('/').reverse().join('-'));
-        return activationDate <= new Date();
-    };
     window.appData = {
         menu: menu
             .filter(x => isEnabled(x["Habilitado"]))
@@ -242,7 +237,7 @@ function createFloatingSaveButton(appData) {
             };
             const handle = await window.showSaveFilePicker(options);
             const writable = await handle.createWritable();
-            await writable.write(`window.appData = ${JSON.stringify(appData, null, 2)};`);
+            await writable.write(`window.appData = ${JSON.stringify(window.appData, null, 2)};`);
             await writable.write('document.dispatchEvent(new Event("appDataReady"));');
             await writable.close();
         } catch (err) {
