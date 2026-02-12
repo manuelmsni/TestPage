@@ -500,12 +500,20 @@ function modal(title, htmlContent) {
     document.getElementById('modal-content').innerHTML = htmlContent;
 
     modal.classList.remove('hidden');
+
+    scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.body.style.overflow = 'hidden';
+    if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`;
+    }
 }
 function closeModal() {
     const modal = document.getElementById('modal');
     if (modal) {
         modal.classList.add('hidden');
     }
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
 }
 function applyTextShadow(el) {
     const old = el.querySelector('.text-shadow-clone');
