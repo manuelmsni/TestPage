@@ -497,10 +497,10 @@ function modal(title, htmlContent) {
         item.innerHTML = title;
         applyTextShadow(item);
     });
-    document.getElementById('modal-content').innerHTML = htmlContent;
-
+    const modalContent = document.getElementById('modal-content');
+    modalContent.innerHTML = htmlContent;
+    modalContent.scrollTop = 0;
     modal.classList.remove('hidden');
-
     scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = 'hidden';
     if (scrollBarWidth > 0) {
