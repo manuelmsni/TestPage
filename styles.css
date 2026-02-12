@@ -14,15 +14,6 @@ h2 {
 h3 {
     font-weight: normal;
 }
-.title-shadow {
-    position: absolute;
-    color: rgba(238, 240, 242, 0.7);
-    left: 0;
-    right: 0;
-    font-weight: 700;
-    font-size: 52px;
-    text-align: center;
-}
 section, footer{
     padding-top: 3rem;
     padding-bottom: 3rem;
@@ -69,7 +60,7 @@ a.nolink {
     justify-content: space-between;
     position: sticky;
     top: 0;
-    z-index: 3;
+    z-index: 10;
     background: #FFFFFF;
     border-bottom: solid 1px #00000038;
 }
@@ -445,7 +436,6 @@ a.nolink {
 #modal h2 {
     text-align: center;
     margin-left: 1rem;
-    margin-top: 3rem;
     margin-bottom: 1rem;
 }
 #modal .title-shadow{
@@ -456,7 +446,8 @@ a.nolink {
     width: 100%;
     max-width: 1000px;
     border-radius: .5rem;
-    padding: 0; 
+    padding: 0;
+    padding-top: 2rem;
     position: relative;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
     display: flex;
@@ -503,6 +494,37 @@ a.nolink {
 #modal.hidden {
     display: none;
 }
+h2.text-shadow {
+    position: relative;
+    display: inline-block;
+}
+.text-shadow::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    color: #e6e6e6;
+    z-index: -1;
+    white-space: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    transform: translate(0px, -20px) scale(1.7);
+    opacity: 0.6;
+}
+.text-shadow-clone {
+    position: absolute;
+    inset: 0;
+    font: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    white-space: inherit;
+    word-break: inherit;
+    color: rgb(231, 231, 231);
+    opacity: 0.6;
+    transform: translate(0px, -3.5rem) scale(1.7);
+    pointer-events: none;
+    z-index: -1;
+}
 @media (max-width: 1200px) {
     .menu-group{
         padding: 1rem;
@@ -537,6 +559,11 @@ a.nolink {
     }
     .methodology-content > div:nth-child(2n)::after {
         content: none;
+    }
+}
+@media (max-width: 850px) {
+    .title-shadow {
+        display: none;
     }
 }
 @media (max-width: 750px) {

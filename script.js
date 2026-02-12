@@ -199,7 +199,7 @@ function renderAbout(section) {
     aboutSection.innerHTML = `
         <div class="container">
             <div class="about-content">
-                ${section.title ? `<span class="title-shadow">${section.title}</span><h2>${section.title}</h2>` : ''}
+                ${section.title ? `<h2 class="text-shadow">${section.title}</h2>` : ''}
                 <div class="description">
                     <h3>${section.text}</h3>
                 </div>
@@ -308,8 +308,7 @@ function renderPredators(section) {
     predatorsSection.innerHTML = `
         <div class="container">
             <div>
-                <span class="title-shadow">${section.title}</span>
-                <h2>${section.title}</h2>
+                <h2 class="text-shadow">${section.title}</h2>
                 <p>${section.text}</p>
             </div>
             <div class="grid">
@@ -419,8 +418,7 @@ function renderIdi(section){
     idiSection.innerHTML = `
             <div class="container">
                 <div>
-                    <span class="title-shadow">${section.title}</span>
-                    <h2>${section.title}</h2>
+                    <h2 class="text-shadow"">${section.title}</h2>
                     <p>${section.text}</p>
                 </div>
                 <div class="grid">
@@ -480,8 +478,7 @@ function renderModal() {
     modal.innerHTML = `
         <div class="modal-window">
             <button class="modal-close">✖</button>
-            <span class="modal-title title-shadow"></span>
-            <h2 class="modal-title"></h2>
+            <h2 class="modal-title text-shadow"></h2>
             <hr>
             <div class="modal-content" id="modal-content"></div>
         </div>
@@ -496,7 +493,10 @@ function renderModal() {
 }
 function modal(title, htmlContent) {
     const modal = document.getElementById('modal');
-    document.querySelectorAll('.modal-title').forEach(item => item.innerHTML = title);
+    document.querySelectorAll('.modal-title').forEach(item => {
+        item.innerHTML = title;
+        applyTextShadow(item);
+    });
     document.getElementById('modal-content').innerHTML = htmlContent;
 
     modal.classList.remove('hidden');
@@ -507,11 +507,20 @@ function closeModal() {
         modal.classList.add('hidden');
     }
 }
+function applyTextShadow(el) {
+    const old = el.querySelector('.text-shadow-clone');
+    if (old) old.remove();
+    const clone = el.cloneNode(true);
+    clone.classList.remove('text-shadow');
+    clone.classList.add('text-shadow-clone');
+    clone.removeAttribute('id');
+    el.appendChild(clone);
+}
 
 function renderSections() {
-    renderModal();
+    
     renderMenu();
-
+    
     const heroData = appData.sections.find(s => s.id === "#hero");
     if (heroData) renderHero(heroData);
 
@@ -532,6 +541,12 @@ function renderSections() {
 
     const contactData = appData.sections.find(s => s.id === "#contact");
     if (contactData) renderContact(contactData);
+
+    document.querySelectorAll(".text-shadow").forEach(item => {
+        applyTextShadow(item);
+    });
+
+    renderModal();
 }
 
 function debug(data){
@@ -569,7 +584,9 @@ async function load() {
             window.APP_GID = gid;
             script.src = "./prototype.js";
         } else {
+           
             script.src = "./database.js";
+             /*
             document.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
             });
@@ -579,6 +596,7 @@ async function load() {
             document.addEventListener('dragstart', function(e) {
                 e.preventDefault();
             });
+            */
         }
         document.head.appendChild(script);
         await waitForAppDataAndDOM();
